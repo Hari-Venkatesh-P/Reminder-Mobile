@@ -4,7 +4,7 @@ import axios from "axios";
 
 import styles from '../styles/Styles';
 
- const Login = ({ navigation }) =>{
+export default function Login({navigation} ){
   const[toggleFlag,setToggleFlag] = useState(false)
   const[newUserName,setNewUserName] = useState('')
   const[newUserEmail,setNewUserEmail] = useState('')
@@ -54,27 +54,28 @@ import styles from '../styles/Styles';
   }
 
   const loginUser = async () =>{
-    if(userName==='' || userPassword==='' ){
-      customAlert("Warning","Kindly fill all the details",true)
-    }else{
-          var reqBody = {
-              userName : userName,
-              password : userPassword
-          }
-          axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
-              if(response.data.success){
-                  customAlert("Success",response.data.message,false)
-                  console.log(response.data.message)
-                  navigation.navigate('Remainders', { name: 'Jane' })
-                  setUserName('')
-                  setUserPassword('')
-              }else{
-                  customAlert(response.data.message,false)
-                  console.log("Warning",response.data.message)
-              } 
-          })
-          .catch((error)=>{console.log(error)})
-    }
+    navigation.navigate('Remainders')
+    // if(userName==='' || userPassword==='' ){
+    //   customAlert("Warning","Kindly fill all the details",true)
+    // }else{
+    //       var reqBody = {
+    //           userName : userName,
+    //           password : userPassword
+    //       }
+    //       axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
+    //           if(response.data.success){
+    //               customAlert("Success",response.data.message,false)
+    //               console.log(response.data.message)
+    //               navigation.navigate('Remainders', { name: 'Jane' })
+    //               setUserName('')
+    //               setUserPassword('')
+    //           }else{
+    //               customAlert(response.data.message,false)
+    //               console.log("Warning",response.data.message)
+    //           } 
+    //       })
+    //       .catch((error)=>{console.log(error)})
+    // }
 }
 
   return (
@@ -126,5 +127,4 @@ import styles from '../styles/Styles';
     </ScrollView>
   );
 }
-
-export default Login;
+;
