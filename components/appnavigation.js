@@ -5,7 +5,8 @@ import { View,Button} from 'react-native';
 
 import Login from '../views/login'
 import Remainders from '../views/remainders'
-import styles from '../styles/Styles'
+import AddRemainders from '../views/addremainder'
+
 
 // const screens = {
 //   Login: {
@@ -29,6 +30,15 @@ const ApplicationNavigation = () => {
             <Stack.Screen name='Login' component={Login} options={{title: 'Remainders', headerStyle: {backgroundColor: '#9363db'}}} />
             <Stack.Screen name='Remainders' component={Remainders} options={{
                         title: 'Remainders',
+                        headerStyle: {backgroundColor: '#9363db'},
+                        headerLeft: null,
+                        headerRight: () => (
+                          <View style={{marginRight:10}}>
+                              <Button onPress={() => alert('Log Out Button')} title="LOGOUT" color="black" />
+                          </View>
+                          )}}/>
+            <Stack.Screen name='AddRemainder' component={AddRemainders} options={{
+                        title: 'AddRemainder',
                         headerStyle: {backgroundColor: '#9363db'},
                         headerLeft: null,
                         headerRight: () => (

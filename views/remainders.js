@@ -1,78 +1,60 @@
 import React, { useState } from 'react';
 import SnackBar from 'react-native-snackbar-component'
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from "react-native";
+import { Modal, TextInput, Text, TouchableHighlight, View, Dimensions, ScrollView} from "react-native";
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
-// import AddRemainderModal from '../components/addremaindermodal'
 
-export default function Remainders() {
+import styles from '../styles/ViewRemainderStyles';
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [addModalFlag,setAddModalFlag] = useState(false)
+export default function Remainders({navigation}) {
 
+  const screenWidth = Math.round(Dimensions.get('window').width);
+  const screenHeight = Math.round(Dimensions.get('window').height);
+  const remainderViewHeight = screenHeight - (20/100)*screenHeight
+
+  console.log(remainderViewHeight)
     return (
-        <View>
-          <Text>Hello From Remainders</Text>
-          <Text>Hello From Remainders</Text>
-          <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => {Alert.alert("Modal has been closed."); }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                  <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(!modalVisible);}}>
-                    <Text style={styles.textStyle}>Hide Modal</Text>
-                  </TouchableHighlight>
-              </View>
-            </View>
-          </Modal>
-          <View>
-            <SnackBar visible={true} position="top" textMessage="Add a Remainder" actionHandler={()=>{setModalVisible(true)}} actionText="ADD" />
+        <View style={{backgroundColor:"yellow",...styles.main}}>
+          <View style={{...styles.remaindercontainer}}>
+            <ScrollView>  
+            <Card>
+                <CardTitle title="This is a title" subtitle="This is subtitle" />
+                <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                <CardAction  separator={true} inColumn={false}>
+                  <CardButton onPress={() => {}} title="Push" color="blue"/>
+                  <CardButton  onPress={() => {}} title="Later" color="blue" />
+                </CardAction>
+              </Card>
+              <Card>
+                <CardTitle title="This is a title" subtitle="This is subtitle" />
+                <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                <CardAction  separator={true} inColumn={false}>
+                  <CardButton onPress={() => {}} title="Push" color="blue"/>
+                  <CardButton  onPress={() => {}} title="Later" color="blue" />
+                </CardAction>
+              </Card>
+              <Card>
+                <CardTitle title="This is a title" subtitle="This is subtitle" />
+                <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                <CardAction  separator={true} inColumn={false}>
+                  <CardButton onPress={() => {}} title="Push" color="blue"/>
+                  <CardButton  onPress={() => {}} title="Later" color="blue" />
+                </CardAction>
+              </Card>
+              <Card>
+                <CardTitle title="This is a title" subtitle="This is subtitle" />
+                <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
+                <CardAction  separator={true} inColumn={false}>
+                  <CardButton onPress={() => {}} title="Push" color="blue"/>
+                  <CardButton  onPress={() => {}} title="Later" color="blue" />
+                </CardAction>
+              </Card>
+            </ScrollView>
+          </View>
+          <View style={{...styles.snackbarcontainer}}>
+            <Text>Hello from Sna</Text>
+            <SnackBar visible={true} textMessage="Add a Remainder" actionHandler={()=>{navigation.navigate('AddRemainder')}} actionText="ADD" />
           </View>
         </View>
       );
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width:250,
-  },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
-});

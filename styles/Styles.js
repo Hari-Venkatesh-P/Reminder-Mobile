@@ -70,13 +70,28 @@ export  const styles = StyleSheet.create({
       marginTop:10,
     },
     touchable:{
-        marginTop:2,
-        marginLeft:30,
+      alignItems: "flex-start",
     },
     createuserbutton:{
         width:200,
         marginTop:10,
       },
+      centeredContainer:{
+        flex:1,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection:"row"
+      },
+      childContainer:{
+        padding:20, 
+        margin:10,
+      },
+      formContainer:{
+        padding:20, 
+        alignItems: "center",
+        borderColor:'#9363db',
+        borderWidth: 2,
+      }
   });
 
   export default styles;
