@@ -1,14 +1,14 @@
 import React from 'react';
+import {Provider} from 'react-redux';
 
 import ApplicationNavigation from './components/appnavigation'
-
+import Store from './redux/store'
 
 export default function App() {
-
-  // const screenWidth = Math.round(Dimensions.get('window').width);
-  // const screenHeight = Math.round(Dimensions.get('window').height);
   return (
-      <ApplicationNavigation />
+    <Provider store={Store}>
+        <ApplicationNavigation />
+    </Provider>
   );
 }
 

@@ -52,9 +52,9 @@ export default function Login({navigation} ){
           }
       }
   }
-  const saveDataToAsyncStorage = async (userId) => {
+  const saveDataToAsyncStorage =  (asyncStorageData) => {
     try {
-      await AsyncStorage.setItem("UserId", userId)
+      AsyncStorage.setItem("asyncStorageData", JSON.stringify(asyncStorageData))
       console.log("Async Storage successful")
     } catch (e) {
       console.log('Failed to save the data to the storage')
@@ -73,8 +73,12 @@ export default function Login({navigation} ){
               if(response.data.success){
                   customAlert("Success",response.data.message,false)
                   console.log(response.data)
-                  saveDataToAsyncStorage("100")
-                  navigation.navigate('AddRemainder')
+                  const asyncStorageData = {
+                    userId : response.data.userId,
+                    token : response.data.jwttoken
+                  }
+                  saveDataToAsyncStorage(asyncStorageData)
+                  navigation.navigate('Remainders')
                   setUserName('')
                   setUserPassword('')
               }else{

@@ -7,7 +7,7 @@ import axios from "axios"
 import styles from '../styles/AddRemainder';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export default function AddRemainder() {
+export default function AddRemainder(props) {
 
     const [title,setTitle] = useState('')
     const [description,setDescription] = useState('')
@@ -18,21 +18,27 @@ export default function AddRemainder() {
 
     const [dateModalVisility,setDateModalVisiblity] = useState(false)
     const [dateModalDisplayed,setDateModalDisplayed] = useState(false)
+    const [token,setToken] = useState('')
 
-  
-
-    useEffect(async () => {
-        async function readDataFromAsyncStorage(){
-            try {
-              const ruserId = await AsyncStorage.getItem("UserId")
-              if (ruserId !== null) {
-                console.log(userId,"ccccccccccccccccccccc")
-              }
-            } catch (e) {
-              console.log('Failed to fetch the data from storage')
-            }
+    async function readDataFromAsyncStorage(props){
+        try {
+          const asyncStorageData = await AsyncStorage.getItem("asyncStorageData")
+          if (asyncStorageData !== null) {
+            setUserId((JSON.parse(asyncStorageData).userId))
+            setToken(JSON.parse(asyncStorageData).token)
+          }
+        } catch (e) {
+          console.log('Failed to fetch the data from async storage')
         }
-        await readDataFromAsyncStorage()
+    }
+
+    useEffect(() => {
+        
+        readDataFromAsyncStorage().then((err,tokens)=>{
+            if(err){
+                console.log('Error while readDataFromAsyncStorage')
+            }
+        })
       }, []);
 
     const onChange = (event, selectedDate) => {
@@ -63,7 +69,7 @@ export default function AddRemainder() {
         customAlert("Warning","Kindly fill all details",false)
        }else{
         var reqBody = {
-            userId : userId,
+            userId : "5f0d33a12ad81300170969c7",
             title : title,
             description : description,
             date : date,
@@ -74,12 +80,13 @@ export default function AddRemainder() {
             if(response.data.success){
                 customAlert("Success",response.data.message,true)
                 console.log(response.data.message)
-                // navigation.navigate('Login', { name: 'Jane' })
+                props.navigation.push("Remainders")
                 setDateModalDisplayed(false)
                 setTitle('')
                 setDescription('')
                 setDate(new Date())
                 setPriority('average')
+                console.log("After Adding")
             }else{
                 customAlert("Warning",response.data.message,true)
                 console.log("Warning",response.data.message)
