@@ -1,31 +1,49 @@
 import React, { useState ,useEffect} from 'react';
-import { TextInput, Text, View,Picker, BackHandler, Button,TouchableHighlight,Alert, AsyncStorage} from "react-native";
+import { TextInput, Text, View,Picker, Button,TouchableHighlight,Alert, BackHandler} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Textarea from 'react-native-textarea';
 import { connect } from "react-redux";
 import { ScrollView } from 'react-native-gesture-handler';
 
-import styles from '../styles/AddRemainder';
-import  {addRemainder }  from '../redux/action';
+import styles from '../styles/UpdateReaminderStyle';
+import  {updateRemainder }  from '../redux/action';
 
-
-function AddRemainder(props) {
-
-    const [title,setTitle] = useState('')
-    const [description,setDescription] = useState('')
-    const [date,setDate] = useState(new Date())
-    const [priority,setPriority] = useState('average')
-    const [userId,setUserId] = useState('')
-
+function UpdateRemainder(props) {
+    const [title,setTitle] = useState(props.route.params.data.title)
+    const [description,setDescription] = useState(props.route.params.data.description)
+    const [date,setDate] = useState(new Date(props.route.params.data.date))
+    const [priority,setPriority] = useState(props.route.params.data.priority)
 
     const [dateModalVisility,setDateModalVisiblity] = useState(false)
-    const [dateModalDisplayed,setDateModalDisplayed] = useState(false)
+
+    useEffect(() => {
+        const backAction = () => {
+        console.log("Back Listener in UpdateRemainder")
+          Alert.alert("Hold on!", "Are you sure you want to go back ?", [
+            {
+              text: "Cancel",
+              onPress: () => null,
+              style: "cancel"
+            },
+            { text: "YES", onPress: () => props.navigation.navigate('Remainders') }
+          ]);
+          return true;
+        };
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => {
+                    console.log("removed listener UpdateRemainder")
+                    backHandler.remove();
+                  }
+      }, []);
 
     const onChange = (event, selectedDate) => {
         setDateModalVisiblity(false)
         const currentDate = selectedDate || date;
         setDate(currentDate);
-        setDateModalDisplayed(true)
     };
 
     const showDatepicker = () => {
@@ -43,22 +61,20 @@ function AddRemainder(props) {
           );
     }
 
-    const addRemainder = () => {
+    const updateRemainderButtonPressed = () => {
+        console.log("update Remainder")
        if(title==='' || description===''){
         customAlert("Warning","Kindly fill all details",false)
        }else{
-        var reqBody = {
+        var data = {
             title : title,
             description : description,
             date : date,
             priority : priority,
+            remainderId:props.route.params.data.remainderId
         }
-        setTitle('')
-        setDescription('')
-        setDate(new Date())
-        props.addRemainderCard(reqBody)
-        setPriority('average')
-        props.navigation.push("Remainders")
+        props.updateRemainderCard(data)
+        props.navigation.push('Remainders')
        }
     }
 
@@ -95,12 +111,7 @@ function AddRemainder(props) {
                             <Text>Select Date :</Text>
                             <TouchableHighlight style={{backgroundColor: "#9363db", borderRadius: 20,padding: 10,elevation: 2,width:100,height:40  }} onPress={() => { showDatepicker()}}>
                                 <View>
-                                    {
-                                        dateModalDisplayed === false && <Text style={styles.textStyle}>Click Here</Text>
-                                    }
-                                    {
-                                        dateModalDisplayed === true && <Text style={styles.textStyle}>{date.getDate()+"-"}{date.getMonth()+"-"}{date.getFullYear()+" "}</Text>
-                                    }
+                                        <Text style={styles.textStyle}>{date.getDate()+"-"}{date.getMonth()+"-"}{date.getFullYear()+" "}</Text>
                                 </View> 
                             </TouchableHighlight>
                             { 
@@ -109,7 +120,7 @@ function AddRemainder(props) {
                         </View>
                     </View>
                     <View style={{alignSelf:"center"}}>
-                        <Button title='Add Remainder' color='#9363db' onPress={()=>{addRemainder()}}/>
+                        <Button title='UPDATE REMAINDER' color='#9363db' onPress={()=>{updateRemainderButtonPressed()}}/>
                     </View>
                 </ScrollView>
             </View>
@@ -117,7 +128,7 @@ function AddRemainder(props) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    addRemainderCard: (data) => dispatch(addRemainder(data)),
+    updateRemainderCard: (data) => dispatch(updateRemainder(data)),
 });
 
-export default connect (null, mapDispatchToProps) (AddRemainder);
+export default connect (null, mapDispatchToProps) (UpdateRemainder);

@@ -1,4 +1,4 @@
-import { FETCH_REMAINDERS,DELETE_REMAINDER} from "./constants";
+import { FETCH_REMAINDERS,DELETE_REMAINDER,UPDATE_REMAINDER} from "./constants";
  
 const initialState = {
   remainders : []

@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput ,Button,TouchableOpacity,ScrollView,Alert,AsyncStorage  } from 'react-native';
+import React, { useState ,useEffect} from 'react';
+import { View, Text, TextInput ,Button,TouchableOpacity,ScrollView,Alert,AsyncStorage,BackHandler  } from 'react-native';
 import axios from "axios";
 
 import styles from '../styles/Styles';
 
-export default function Login({navigation} ){
+export default function Login(props ){
   const[toggleFlag,setToggleFlag] = useState(true)
   const[newUserName,setNewUserName] = useState('')
   const[newUserEmail,setNewUserEmail] = useState('')
   const[newUserPassword,setNewUserPassword] = useState('')
   const[userName,setUserName] = useState('')
   const[userPassword,setUserPassword] = useState('')
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to exit Reminders ?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+    }, []);
+
 
   const customAlert = (alerttitle,alertdescription,cancellablestatus) =>{
     Alert.alert(
@@ -72,15 +94,15 @@ export default function Login({navigation} ){
           axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
               if(response.data.success){
                   customAlert("Success",response.data.message,false)
+                  setUserName('')
+                  setUserPassword('')
                   console.log(response.data)
                   const asyncStorageData = {
                     userId : response.data.userId,
                     token : response.data.jwttoken
                   }
                   saveDataToAsyncStorage(asyncStorageData)
-                  navigation.navigate('Remainders')
-                  setUserName('')
-                  setUserPassword('')
+                  props.navigation.navigate('Remainders')
               }else{
                   customAlert(response.data.message,false)
                   console.log("Warning",response.data.message)
@@ -110,7 +132,11 @@ export default function Login({navigation} ){
                                     <Button title='Login' color='#9363db' onPress={()=>{loginUser()}}/>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.touchable} onPress={()=>{setToggleFlag(true)}}>
+                            <TouchableOpacity style={styles.touchable} onPress={()=>{
+                                                                        setToggleFlag(true)
+                                                                        setUserName('')
+                                                                        setUserPassword('')
+                                                                            }}>
                                 <Text>Create a new Account ? </Text>
                             </TouchableOpacity>
                         </View>
@@ -134,8 +160,13 @@ export default function Login({navigation} ){
                                 <Button title='CREATE ACCOUNT' color='#9363db' onPress={()=>{createUser()}}/>
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.touchable} onPress={()=>{setToggleFlag(false)}}>
-                            <Text>Already created a account ? </Text>
+                        <TouchableOpacity style={styles.touchable} onPress={()=>{
+                                                                            setToggleFlag(false)
+                                                                            setNewUserName('')
+                                                                            setNewUserEmail('')
+                                                                            setNewUserPassword('')
+                                                                                }}>
+                            <Text>Already created an account ? </Text>
                             </TouchableOpacity>
                         </View>
                     }
