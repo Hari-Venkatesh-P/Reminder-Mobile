@@ -10,7 +10,7 @@ import Store from './redux/store'
 export default function App() {
   return (
     <Provider store={Store}>
-        <NavigationContainer ref={navigationRef}>{/* ... */}</NavigationContainer>
+        <NavigationContainer ref={navigationRef}></NavigationContainer>
         <ApplicationNavigation />
     </Provider>
   );

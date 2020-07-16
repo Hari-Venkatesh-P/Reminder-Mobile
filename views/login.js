@@ -11,9 +11,12 @@ export default function Login(props ){
   const[newUserPassword,setNewUserPassword] = useState('')
   const[userName,setUserName] = useState('')
   const[userPassword,setUserPassword] = useState('')
+  const[loginButtonPress,setLoginButtonPressed] = useState(false)
+  const[createUserButtonPress,setCreateUserButtonPressed] = useState(false)
 
   useEffect(() => {
     const backAction = () => {
+      console.log("In use effect return Login")
       Alert.alert("Hold on!", "Are you sure you want to exit Reminders ?", [
         {
           text: "Cancel",
@@ -30,7 +33,7 @@ export default function Login(props ){
       backAction
     );
 
-    return () => backHandler.remove();
+    return () => {console.log("In use effect return Login");backHandler.remove()};
     }, []);
 
 
@@ -84,32 +87,35 @@ export default function Login(props ){
   }
 
   const loginUser = async () =>{
-    if(userName==='' || userPassword==='' ){
-      customAlert("Warning","Kindly fill all the details",true)
-    }else{
-          var reqBody = {
-              userName : userName,
-              password : userPassword
-          }
-          axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
-              if(response.data.success){
-                  customAlert("Success",response.data.message,false)
-                  setUserName('')
-                  setUserPassword('')
-                  console.log(response.data)
-                  const asyncStorageData = {
-                    userId : response.data.userId,
-                    token : response.data.jwttoken
-                  }
-                  saveDataToAsyncStorage(asyncStorageData)
-                  props.navigation.navigate('Remainders')
-              }else{
-                  customAlert(response.data.message,false)
-                  console.log("Warning",response.data.message)
-              } 
-          })
-          .catch((error)=>{console.log(error)})
-    }
+    console.log("Login Clicked" , loginButtonPress.toString())
+
+      if(userName==='' || userPassword==='' ){
+        customAlert("Warning","Kindly fill all the details",true)
+      }else{
+            setLoginButtonPressed(true)
+            var reqBody = {
+                userName : userName,
+                password : userPassword
+            }
+            axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
+                if(response.data.success){
+                    customAlert("Success",response.data.message,false)
+                    setUserName('')
+                    setUserPassword('')
+                    console.log(response.data)
+                    const asyncStorageData = {
+                      userId : response.data.userId,
+                      token : response.data.jwttoken
+                    }
+                    saveDataToAsyncStorage(asyncStorageData)
+                    props.navigation.navigate('Remainders')
+                }else{
+                    customAlert(response.data.message,false)
+                    console.log("Warning",response.data.message)
+                } 
+            })
+            .catch((error)=>{console.log(error)})
+      }
 }
 
   return (

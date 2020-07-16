@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import { TextInput, Text, View,Picker, Button,TouchableHighlight,Alert, BackHandler} from "react-native";
+import { TextInput, Text, View,Picker, Button,TouchableHighlight,Alert} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Textarea from 'react-native-textarea';
 import { connect } from "react-redux";
@@ -15,30 +15,6 @@ function UpdateRemainder(props) {
     const [priority,setPriority] = useState(props.route.params.data.priority)
 
     const [dateModalVisility,setDateModalVisiblity] = useState(false)
-
-    useEffect(() => {
-        const backAction = () => {
-        console.log("Back Listener in UpdateRemainder")
-          Alert.alert("Hold on!", "Are you sure you want to go back ?", [
-            {
-              text: "Cancel",
-              onPress: () => null,
-              style: "cancel"
-            },
-            { text: "YES", onPress: () => props.navigation.navigate('Remainders') }
-          ]);
-          return true;
-        };
-        const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
-        );
-    
-        return () => {
-                    console.log("removed listener UpdateRemainder")
-                    backHandler.remove();
-                  }
-      }, []);
 
     const onChange = (event, selectedDate) => {
         setDateModalVisiblity(false)

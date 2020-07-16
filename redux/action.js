@@ -3,6 +3,21 @@ import {AsyncStorage} from "react-native";
 
 import { FETCH_REMAINDERS , DELETE_REMAINDER , UPDATE_REMAINDER} from './constants';
 
+
+import { Alert } from 'react-native';
+
+function customAlert(alerttitle,alertdescription,cancellablestatus){
+    Alert.alert(
+        alerttitle,
+        alertdescription,
+        [
+          { text: "Ok" }
+        ],
+        { cancelable:cancellablestatus }
+      );
+}
+
+
 export const fetchRemainders = ( ) => dispatch => {
     try {
         AsyncStorage.getItem("asyncStorageData",(err,asyncStorageData)=>{
@@ -71,9 +86,13 @@ export const updateRemainder = (data) => dispatch => {
             }
             console.log(reqBody , "Req Body")
                 axios.put("https://remainders-backend.herokuapp.com/remainder/",reqBody).then((response)=>{
-                  console.log(response.data)
-                    if(response.data.success){
-                    }
+                  if(response.data.success){
+                    console.log(response.data.message)
+                    customAlert("Success",response.data.message,true)
+                  }else{
+                    customAlert("Warning",response.data.message,false)
+                    console.log("Warning",response.data.message)
+                  } 
                 })
                 .catch((error)=>{console.log("Error when fetching data using axios  UPDATE_REMAINDER : "+error)})
                 console.log("After Axios")
@@ -101,9 +120,10 @@ export const addRemainder = ( data) => dispatch => {
                 console.log("Doing Axios hit ADD_REMAINDERS")  
                 axios.post("https://remainders-backend.herokuapp.com/remainder",reqBody).then((response)=>{
                   if(response.data.success){
-                    alert(response.data.message)
                     console.log(response.data.message)
+                    customAlert("Success",response.data.message,true)
                   }else{
+                    customAlert("Warning",response.data.message,false)
                     console.log("Warning",response.data.message)
                   } 
                 })
