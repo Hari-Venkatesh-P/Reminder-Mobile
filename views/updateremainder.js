@@ -85,9 +85,9 @@ function UpdateRemainder(props) {
                         </View>
                         <View style={{alignItems:"center",flexDirection:"row",justifyContent:"space-between"}}>
                             <Text>Select Date :</Text>
-                            <TouchableHighlight style={{backgroundColor: "#9363db", borderRadius: 20,padding: 10,elevation: 2,width:100,height:40  }} onPress={() => { showDatepicker()}}>
+                            <TouchableHighlight style={{backgroundColor: "#9363db", borderRadius: 20,padding: 10,elevation: 2,width:110,height:40  }} onPress={() => { showDatepicker()}}>
                                 <View>
-                                        <Text style={styles.textStyle}>{date.getDate()+"-"}{date.getMonth()+"-"}{date.getFullYear()+" "}</Text>
+                                        <Text style={styles.textStyle}>{date.getDate()+"-"}{(date.getMonth()+1)+"-"}{date.getFullYear()+" "}</Text>
                                 </View> 
                             </TouchableHighlight>
                             { 

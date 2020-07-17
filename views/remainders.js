@@ -39,7 +39,7 @@ function Remainders(props) {
                           <Text style={{color:"white"}}>{"Priority "+(currentremainder.priority).toString().toUpperCase()}</Text>
                       </TouchableHighlight>
                       <TouchableHighlight style={{flexDirection:"row",alignItems:"center",alignSelf:"center",justifyContent:"center",backgroundColor: "#9363db", borderRadius: 20,padding: 10,elevation: 2,width:120,height:30,marginRight:10,marginLeft:10 ,marginBottom:10  }}>
-                          <Text style={{color:"white"}}>{new Date(currentremainder.date).getDate() +"/" +new Date(currentremainder.date).getMonth() +"/"+new Date(currentremainder.date).getFullYear()}</Text>
+                          <Text style={{color:"white"}}>{new Date(currentremainder.date).getDate() +"/" + ((new Date(currentremainder.date).getMonth())+1) +"/"+new Date(currentremainder.date).getFullYear()}</Text>
                       </TouchableHighlight>
                     </View>
                     <CardAction  separator={true} inColumn={false}>

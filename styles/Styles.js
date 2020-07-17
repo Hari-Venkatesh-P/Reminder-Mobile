@@ -91,6 +91,13 @@ export  const styles = StyleSheet.create({
         alignItems: "center",
         borderColor:'#9363db',
         borderWidth: 2,
+      },
+      loaderstyle:{
+        flex: 1,
+        justifyContent: "center",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10,
       }
   });
 

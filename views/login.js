@@ -1,18 +1,18 @@
 import React, { useState ,useEffect} from 'react';
-import { View, Text, TextInput ,Button,TouchableOpacity,ScrollView,Alert,AsyncStorage,BackHandler  } from 'react-native';
+import { ActivityIndicator, StyleSheet,View, Text, TextInput ,Button,TouchableOpacity,ScrollView,Alert,AsyncStorage,BackHandler  } from 'react-native';
 import axios from "axios";
 
 import styles from '../styles/Styles';
 
 export default function Login(props ){
-  const[toggleFlag,setToggleFlag] = useState(true)
+  const[toggleFlag,setToggleFlag] = useState(false)
   const[newUserName,setNewUserName] = useState('')
   const[newUserEmail,setNewUserEmail] = useState('')
   const[newUserPassword,setNewUserPassword] = useState('')
   const[userName,setUserName] = useState('')
   const[userPassword,setUserPassword] = useState('')
-  const[loginButtonPress,setLoginButtonPressed] = useState(false)
-  const[createUserButtonPress,setCreateUserButtonPressed] = useState(false)
+  const[displayLoader,setDisplayLoader] = useState(false)
+  const[displayForm,setDisplayForm]= useState(true)
 
   useEffect(() => {
     const backAction = () => {
@@ -36,7 +36,6 @@ export default function Login(props ){
     return () => {console.log("In use effect return Login");backHandler.remove()};
     }, []);
 
-
   const customAlert = (alerttitle,alertdescription,cancellablestatus) =>{
     Alert.alert(
         alerttitle,
@@ -54,6 +53,8 @@ export default function Login(props ){
       }else{
           var emailPattern = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+[.]{1}[a-z]{2,3}")
           if(emailPattern.test(newUserEmail)){
+            setDisplayLoader(true)
+            setDisplayForm(false)
             var reqBody = {
                 userName : newUserName,
                 userEmail : newUserEmail,
@@ -63,10 +64,16 @@ export default function Login(props ){
                 if(response.data.success){
                     customAlert("Success",response.data.message,false)
                     console.log(response.data)
+                    setDisplayLoader(false)
+                    setDisplayForm(true)
+                    setToggleFlag(false)
                     setNewUserName('')
                     setNewUserEmail('')
                     setNewUserPassword('')
+                    props.navigation.navigate('Login')
                 }else{
+                    setDisplayLoader(false)
+                    setDisplayForm(true)
                     customAlert(response.data.message,false)
                     console.log("Warning",response.data.message)
                 } 
@@ -87,19 +94,17 @@ export default function Login(props ){
   }
 
   const loginUser = async () =>{
-    console.log("Login Clicked" , loginButtonPress.toString())
-
       if(userName==='' || userPassword==='' ){
         customAlert("Warning","Kindly fill all the details",true)
       }else{
-            setLoginButtonPressed(true)
+            setDisplayLoader(true)
+            setDisplayForm(false)
             var reqBody = {
                 userName : userName,
                 password : userPassword
             }
             axios.post("https://remainders-backend.herokuapp.com/user/login",reqBody).then((response)=>{
                 if(response.data.success){
-                    customAlert("Success",response.data.message,false)
                     setUserName('')
                     setUserPassword('')
                     console.log(response.data)
@@ -108,8 +113,12 @@ export default function Login(props ){
                       token : response.data.jwttoken
                     }
                     saveDataToAsyncStorage(asyncStorageData)
+                    setDisplayLoader(false)
+                    setDisplayForm(true)
                     props.navigation.navigate('Remainders')
                 }else{
+                  setDisplayLoader(false)
+                    setDisplayForm(true)
                     customAlert(response.data.message,false)
                     console.log("Warning",response.data.message)
                 } 
@@ -121,9 +130,14 @@ export default function Login(props ){
   return (
         <View style={styles.centeredContainer}>
             <ScrollView>
+                { displayLoader === true &&
+                      <View style={styles.loaderstyle}>
+                          <ActivityIndicator size="large" color="#9363db" />
+                      </View>
+                }
                 <View style={styles.childContainer}>
                     <View>
-                    { toggleFlag===false && 
+                    { (toggleFlag===false && displayForm===true) && 
                         <View >
                             <View style={styles.formContainer}>
                                 <View>
@@ -135,7 +149,10 @@ export default function Login(props ){
                                     <TextInput style={styles.textInputContainer} secureTextEntry={true}  value={userPassword} onChangeText={(value)=>{setUserPassword(value)}}  placeholder="Password"/>
                                 </View>
                                 <View style={styles.loginbutton}>
-                                    <Button title='Login' color='#9363db' onPress={()=>{loginUser()}}/>
+                                    <Button title='Login' color='#9363db' onPress={()=>{
+                                          
+                                          loginUser()
+                                        }}/>
                                 </View>
                             </View>
                             <TouchableOpacity style={styles.touchable} onPress={()=>{
@@ -147,7 +164,7 @@ export default function Login(props ){
                             </TouchableOpacity>
                         </View>
                     }
-                    {toggleFlag===true &&
+                    { (toggleFlag===true  && displayForm===true) && 
                         <View >
                             <View style={styles.formContainer}>
                             <View>
@@ -182,3 +199,15 @@ export default function Login(props ){
         </View>
   );
 };
+
+// const loaderstyle = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center"
+//   },
+//   horizontal: {
+//     flexDirection: "row",
+//     justifyContent: "space-around",
+//     padding: 10
+//   }
+// });

@@ -1,44 +1,32 @@
 import React, { useEffect } from "react";
-import { Text, View, StyleSheet, BackHandler, Alert } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator, Alert } from "react-native";
 
 const BackButton = () => {
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel"
-        },
-        { text: "YES", onPress: () => BackHandler.exitApp() }
-      ]);
-      return true;
-    };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-    }, []);
+  useEffect(()=>{
+    console.log("Back Button Called")
+  })
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Click Back button!</Text>
-    </View>
+    <View style={[styles.container, styles.horizontal]}>
+    <ActivityIndicator />
+    <ActivityIndicator size="large" />
+    <ActivityIndicator size="small" color="#0000ff" />
+    <ActivityIndicator size="large" color="#00ff00" />
+  </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center"
   },
-  text: {
-    fontSize: 18,
-    fontWeight: "bold"
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   }
 });
 
