@@ -2,12 +2,10 @@ import React, { useState ,useEffect} from 'react';
 import { TextInput, Text, View,Picker, BackHandler, Button,TouchableHighlight,Alert, AsyncStorage} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Textarea from 'react-native-textarea';
-import { connect } from "react-redux";
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from "axios";
 
 import styles from '../styles/AddRemainder';
-import  {addRemainder }  from '../redux/action';
-
 
 function AddRemainder(props) {
 
@@ -15,8 +13,6 @@ function AddRemainder(props) {
     const [description,setDescription] = useState('')
     const [date,setDate] = useState(new Date())
     const [priority,setPriority] = useState('average')
-    const [userId,setUserId] = useState('')
-
 
     const [dateModalVisility,setDateModalVisiblity] = useState(false)
     const [dateModalDisplayed,setDateModalDisplayed] = useState(false)
@@ -44,23 +40,43 @@ function AddRemainder(props) {
     }
 
     const addRemainder = () => {
-       if(title==='' || description===''){
-        customAlert("Warning","Kindly fill all details",false)
-       }else{
-        var reqBody = {
-            title : title,
-            description : description,
-            date : date,
-            priority : priority,
+        try {
+            if(title==='' || description===''){
+                customAlert("Warning","Kindly fill all details",false)
+               }else{
+                AsyncStorage.getItem("asyncStorageData",(err,asyncStorageData)=>{
+                    if(err){
+                        console.log(err,"Error")
+                    }else{
+                          reqBody = {
+                              userId:JSON.parse(asyncStorageData).userId,
+                              title : title,
+                              description : description,
+                              date : date,
+                              priority : priority,
+                          }
+                          console.log("Doing Axios hit ADD_REMAINDERS")  
+                          axios.post("https://remainders-backend.herokuapp.com/remainder",reqBody).then((response)=>{
+                            if(response.data.success){
+                              console.log(response.data.message)
+                              customAlert("Success",response.data.message,true)
+                              setTitle('')
+                              setDescription('')
+                              setDate(new Date())
+                              setPriority('average')
+                              props.navigation.push("Remainders")
+                            }else{
+                              customAlert("Warning",response.data.message,false)
+                              console.log("Warning",response.data.message)
+                            } 
+                          })
+                        }
+                     })
+           }
+         }catch (error) {
+               
+           }
         }
-        setTitle('')
-        setDescription('')
-        setDate(new Date())
-        props.addRemainderCard(reqBody)
-        setPriority('average')
-        props.navigation.push("Remainders")
-       }
-    }
 
     return (
             <View style={styles.centeredContainer}>
@@ -116,8 +132,4 @@ function AddRemainder(props) {
       );
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    addRemainderCard: (data) => dispatch(addRemainder(data)),
-});
-
-export default connect (null, mapDispatchToProps) (AddRemainder);
+export default AddRemainder;

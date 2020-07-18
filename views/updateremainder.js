@@ -1,12 +1,11 @@
 import React, { useState ,useEffect} from 'react';
-import { TextInput, Text, View,Picker, Button,TouchableHighlight,Alert} from "react-native";
+import { TextInput, Text, View,Picker, Button,TouchableHighlight,Alert,AsyncStorage} from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Textarea from 'react-native-textarea';
-import { connect } from "react-redux";
+import axios from "axios";
 import { ScrollView } from 'react-native-gesture-handler';
 
 import styles from '../styles/UpdateReaminderStyle';
-import  {updateRemainder }  from '../redux/action';
 
 function UpdateRemainder(props) {
     const [title,setTitle] = useState(props.route.params.data.title)
@@ -39,19 +38,41 @@ function UpdateRemainder(props) {
 
     const updateRemainderButtonPressed = () => {
         console.log("update Remainder")
-       if(title==='' || description===''){
-        customAlert("Warning","Kindly fill all details",false)
-       }else{
-        var data = {
-            title : title,
-            description : description,
-            date : date,
-            priority : priority,
-            remainderId:props.route.params.data.remainderId
+        try {
+            if(title==='' || description===''){
+                customAlert("Warning","Kindly fill all details",false)
+               }else{
+                AsyncStorage.getItem("asyncStorageData",(err,asyncStorageData)=>{
+                    if(err){
+                        console.log(err,"Error while getting Async Storage UPDATE_REMAINDER")
+                    }else{
+                      console.log("Before Json")
+                      reqBody = {
+                        userId : JSON.parse(asyncStorageData).userId,
+                        title : title,
+                        description : description,
+                        priority : priority,
+                        date :date,
+                        remainderId: props.route.params.data.remainderId,
+                      }
+                          axios.put("https://remainders-backend.herokuapp.com/remainder/",reqBody).then((response)=>{
+                            if(response.data.success){
+                              console.log(response.data.message)
+                              customAlert("Success",response.data.message,true)
+                              props.navigation.push('Remainders')
+                            }else{
+                              customAlert("Warning",response.data.message,false)
+                              console.log("Warning",response.data.message)
+                            } 
+                          })
+                          .catch((error)=>{console.log("Error when fetching data using axios  UPDATE_REMAINDER : "+error)})
+                          console.log("After Axios")
+                    }
+                  })
+               }
+        } catch (error) {
+            
         }
-        props.updateRemainderCard(data)
-        props.navigation.push('Remainders')
-       }
     }
 
     return (
@@ -103,8 +124,5 @@ function UpdateRemainder(props) {
       );
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    updateRemainderCard: (data) => dispatch(updateRemainder(data)),
-});
 
-export default connect (null, mapDispatchToProps) (UpdateRemainder);
+export default UpdateRemainder;

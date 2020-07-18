@@ -102,34 +102,3 @@ export const updateRemainder = (data) => dispatch => {
     console.log('ERROR during updateRemainder   :     '+e)
   }
 }
-
-
-export const addRemainder = ( data) => dispatch => {
-  try {
-      AsyncStorage.getItem("asyncStorageData",(err,asyncStorageData)=>{
-          if(err){
-              console.log(err,"Error")
-          }else{
-                reqBody = {
-                    userId:JSON.parse(asyncStorageData).userId,
-                    title:data.title,
-                    description:data.description,
-                    date:data.date,
-                    priority:data.priority
-                }
-                console.log("Doing Axios hit ADD_REMAINDERS")  
-                axios.post("https://remainders-backend.herokuapp.com/remainder",reqBody).then((response)=>{
-                  if(response.data.success){
-                    console.log(response.data.message)
-                    customAlert("Success",response.data.message,true)
-                  }else{
-                    customAlert("Warning",response.data.message,false)
-                    console.log("Warning",response.data.message)
-                  } 
-                })
-              }
-           })
-    }catch (e) {
-              console.log('ERROR during  ADD_REMAINDERS :     '+e)
-    }
-}
