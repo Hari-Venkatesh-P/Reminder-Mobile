@@ -66,39 +66,3 @@ export const deleteRemainder = (remainderId ) => dispatch => {
       console.log('ERROR during deleteRemainder   :     '+e)
     }
 }
-
-
-export const updateRemainder = (data) => dispatch => {
-  try {
-    console.log("Before AsyncStorage")
-      AsyncStorage.getItem("asyncStorageData",(err,asyncStorageData)=>{
-          if(err){
-              console.log(err,"Error while getting Async Storage UPDATE_REMAINDER")
-          }else{
-            console.log("Before Json")
-            reqBody = {
-              userId : JSON.parse(asyncStorageData).userId,
-              title : data.title,
-              description : data.description,
-              priority : data.priority,
-              date : data.date,
-              remainderId: data.remainderId,
-            }
-            console.log(reqBody , "Req Body")
-                axios.put("https://remainders-backend.herokuapp.com/remainder/",reqBody).then((response)=>{
-                  if(response.data.success){
-                    console.log(response.data.message)
-                    customAlert("Success",response.data.message,true)
-                  }else{
-                    customAlert("Warning",response.data.message,false)
-                    console.log("Warning",response.data.message)
-                  } 
-                })
-                .catch((error)=>{console.log("Error when fetching data using axios  UPDATE_REMAINDER : "+error)})
-                console.log("After Axios")
-          }
-        })
-  } catch (e) {
-    console.log('ERROR during updateRemainder   :     '+e)
-  }
-}

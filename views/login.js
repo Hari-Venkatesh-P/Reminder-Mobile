@@ -74,7 +74,7 @@ export default function Login(props ){
                 }else{
                     setDisplayLoader(false)
                     setDisplayForm(true)
-                    customAlert(response.data.message,false)
+                    customAlert("Warning",response.data.message,false)
                     console.log("Warning",response.data.message)
                 } 
             })
@@ -119,7 +119,7 @@ export default function Login(props ){
                 }else{
                   setDisplayLoader(false)
                     setDisplayForm(true)
-                    customAlert(response.data.message,false)
+                    customAlert("Warning",response.data.message,false)
                     console.log("Warning",response.data.message)
                 } 
             })

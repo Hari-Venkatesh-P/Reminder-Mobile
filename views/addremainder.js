@@ -48,7 +48,7 @@ function AddRemainder(props) {
                     if(err){
                         console.log(err,"Error")
                     }else{
-                          reqBody = {
+                          var reqBody = {
                               userId:JSON.parse(asyncStorageData).userId,
                               title : title,
                               description : description,
@@ -120,7 +120,7 @@ function AddRemainder(props) {
                                 </View> 
                             </TouchableHighlight>
                             { 
-                                dateModalVisility===true && (<DateTimePicker testID="dateTimePicker" value={date} mode="date" onChange={(event, selectedDate)=>{onChange(event, selectedDate)}}/>)
+                                dateModalVisility===true && (<DateTimePicker testID="dateTimePicker" display="calendar" value={date} mode="date" minimumDate={new Date()} onChange={(event, selectedDate)=>{onChange(event, selectedDate)}}/>)
                             }
                         </View>
                     </View>

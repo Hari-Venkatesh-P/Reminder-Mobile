@@ -33,7 +33,7 @@ function Remainders(props) {
           return(
             <View key={currentremainder._id}>
                 <Card style={{backgroundColor:"#e6c0ed",marginLeft:10,marginRight:10,marginTop:10}} >
-                    <CardTitle title={currentremainder.title.toString().toUpperCase()} subtitle={currentremainder.description} />
+                    <CardTitle title={currentremainder.title.toString().toUpperCase()} titleStyle={{fontFamily:"RobotoSlab-Regular",fontSize:18}}subtitle={currentremainder.description}/>
                     <View style={{flexDirection:"row"}}>
                       <TouchableHighlight style={ (currentremainder.priority==='high' ? styles.highpriority : (currentremainder.priority==="average"  ? styles.averagepriority : styles.lowpriority)) }>
                           <Text style={{color:"white"}}>{"Priority "+(currentremainder.priority).toString().toUpperCase()}</Text>

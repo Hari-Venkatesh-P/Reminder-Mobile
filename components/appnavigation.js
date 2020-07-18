@@ -34,7 +34,22 @@ const ApplicationNavigation = () => {
   return ( 
     <NavigationContainer>
         <Stack.Navigator initialRouteName='Login' >
-            <Stack.Screen name='Login' component={Login} options={{title: 'Reminders', headerStyle: {backgroundColor: '#9363db'}}} />
+            <Stack.Screen name='Login' component={Login} 
+                              options={{
+                              title: 'Reminders', 
+                              headerStyle: {backgroundColor: '#9363db'},
+                              header: ({ scene, previous, navigation }) => {
+                                const { options } = scene.descriptor;
+                                const title = options.title;
+                                return (
+                                 <View style={{backgroundColor:"#9363db",width:"100%",height:80,flexDirection:"column"}}>
+                                          <View style={{position:"absolute",top:40,marginLeft:10}}>
+                                              <Text style={{color:"black",fontSize:20}}>Reminders</Text>
+                                          </View>
+                                 </View>
+                                );
+                              }
+                            }}/>
             <Stack.Screen name='Remainders' component={Remainders} 
                         options={{
                         title: 'Reminders',
